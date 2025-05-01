@@ -1,0 +1,112 @@
+## awk
+
+El comando `awk` es una herramienta poderosa en Linux y Unix que se utiliza para procesar y analizar texto, especialmente para trabajar con archivos de texto que estan organizados en columnas o campo
+
+Sintaxis basica de `awk`:
+
+    awk 'acciones' archivo
+
+Ejemplos comunes de uso:
+
+**Imprimir columnas especificas**:
+
+    awk '{print $1}' archivo.txt
+
+**Usar delimitadores especificos**:
+
+    awk -F, '{print $1, $2}' archivo.csv
+
+**Realizar operaciones matematicas**:
+
+    awk '/pattern/ {print $0}' archivo.txt
+
+### Ejemplo de Caso de Uso
+
+Generar un informe con el total de ventas por **producto** (es decir, cuantas unidades de cada producto se vendieron en total y el total de dinero generado por cada producto).
+
+    awk -F, 'NR > 1 {venta[$3]+=$4*$5} END {for (producto in venta) print producto, venta[producto]}' ventas.log
+
+## cut
+
+El comando `cut` en Linux y Unix se utiliza para extraer secciones de texto de cada linea de un archivo o entrada estandar.
+
+Sintaxis basica:
+
+    cut [opciones] archivo
+
+### cut comunes
+
+**Cortar por rangos de caracteres**:
+
+    cut -c1-5 archivo.txt
+
+**Cortar por multiples campos**:
+
+    cut -d',' -f1,3 archivo.csv
+
+### Resumen de opciones comunes:
+
+-   **-d**: Especifica el delimitador (por ejemplo, una coma, un espacio, etc.).
+    
+-   **-f**: Selecciona los campos que se van a mostrar (por numero, o rangos de campos).
+    
+-   **-c**: Selecciona un rango de caracteres.
+
+
+### Ejemplo de Caso de Uso
+
+Obtener el numero de solicitudes (lineas) por cada direccion IP, pero solo aquellas que recibieron un codigo de estado 200 (solicitudes exitosas).
+
+    grep ' 200 ' accesos.log | cut -d' ' -f1 | sort | uniq -c | sort -nr
+
+## grep
+
+El comando `grep` en Linux se utiliza para buscar texto en archivos o en la salida de otros comandos. La busqueda se realiza mediante expresiones regulares, lo que permite patrones de busqueda complejos.
+
+Sintaxis basica:
+
+    grep [opciones] patron [archivo...]
+
+
+### Ejemplo de Caso de Uso
+
+encontrar todas las lineas que contienen el termino "error" en los logs de Apache (`/var/log/apache2/error.log`).
+
+    grep "error" /var/log/apache2/error.log
+
+## sed
+
+El comando `sed` (Stream Editor) en Linux es una herramienta poderosa para realizar manipulaciones de texto de manera no interactiva. Se usa principalmente para hacer modificaciones en un flujo de datos (ya sea un archivo o una entrada estandar), como buscar, reemplazar, eliminar o insertar texto, todo de forma automatizada y sin necesidad de abrir un editor de texto.
+
+Sintaxis basica:
+
+    sed [opciones] 'expresion' archivo
+
+Ejemplos basicos:
+
+Reemplazar todas las ocurrencias en cada linea:
+
+    sed 's/palabra1/palabra2/g' archivo.txt
+
+Eliminar una linea especifica:
+
+    sed '3d' archivo.txt
+
+Eliminar lineas que coincidan con una expresion regular:
+
+    sed '/patron/d' archivo.txt
+
+Reemplazar texto en el archivo original (modificar directamente el archivo):
+
+    sed -i 's/palabra1/palabra2/' archivo.txt
+
+Insertar una linea antes o despues de una linea especifica:
+
+    sed '3a Esta es la nueva linea' archivo.txt
+
+### Ejemplo de Caso de Uso
+
+Reemplazar todas las referencias a una IP antigua por una nueva. Utilizas `sed` para hacer el reemplazo de manera automatica:
+
+    sed -i 's/192.168.0.1/192.168.1.1/g' config.txt
+

@@ -1,0 +1,13 @@
+#!/bin/bash
+# Realiza un script que busque todos los procesos que estan utilizando mas del 50% de la CPU
+# y los termine. Solo se considera el uso de la CPU del usuario actual.
+
+# Obtener los procesos que consumen mas del 50% de la CPU
+ps -eo pid,%cpu,comm --sort=-%cpu | awk '$2 > 50' | while read pid cpu comm; do
+    # Verificar si el proceso pertenece al usuario actual
+    if [ "$(ps -p $pid -o user=)" == "$USER" ]; then
+        # Terminar el proceso
+        kill "$pid"
+        echo "Proceso '$comm' con PID $pid terminado por usar mas del 50% de CPU."
+    fi
+done
